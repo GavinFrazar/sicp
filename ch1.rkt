@@ -18,8 +18,8 @@
   (average (/ x guess) guess))
 (define (good-enough? guess x)
   (< (abs (- (square guess) x)) 0.00001))
-(define (sqrt x)
-  (sqrt-iter 1.0 x))
+;; (define (sqrt x)
+;;   (sqrt-iter 1.0 x))
 (define (new-if predicate then-clause else-clause)
   (cond (predicate then-clause)
         (else else-clause)))
@@ -161,12 +161,9 @@
   (product identity 1 n inc))
 
 (define (approx-pi k)
-  (define (f k) (cond ((= k 1) 2)
-                      ((odd? k) (+ (dec k) 2))
-                      (else (+ k 2))))
-  (define (g k) (cond ((even? k) (+ (dec k) 2))
-                      (else (+ k 2))))
-  (* 4.0 (/ (product f 1 k inc) (product g 1 k inc))))
+  (define (f n) (- n (remainder n 2)))
+  (define (g n) (- n (remainder (inc n) 2)))
+  (* 4.0 (/ (product f 3 (+ k 2) inc) (product g 3 (+ k 2) inc))))
 
 (define (filtered-accumulate f a b next combiner identity-elem constraint)
   (define (iter a acc)
@@ -175,5 +172,60 @@
           (else (iter (next a) acc))))
   (iter a identity-elem))
 
-(define (f g)
-  (g 2))
+(define (fixed-point f initial-guess)
+  (define tolerance 0.00001)
+  (define (good-enough? a b)
+    (< (abs (- a b)) tolerance))
+  (define (try guess)
+    (let ((next (f guess)))
+      (cond ((good-enough? next guess) next)
+            (else (try next)))))
+  (try initial-guess))
+
+(define (sqrt-fixed-point x)
+  (fixed-point (lambda (y) (average y (/ x y))) 1.0))
+
+;; Exercise 1.35
+(define golden-ratio
+  (fixed-point (lambda (x) (+ 1 (/ 1 x))) 1.0))
+
+;; Exercise 1.36
+(define find-x
+  (fixed-point (lambda (x) (/ (log 1000) (log x))) 2.0))
+
+(define (average-damp f)
+  (lambda (x) (average x (f x))))
+
+;; (define (sqrt x)
+;;   (fixed-point (average-damp (lambda (y) (/ x y))) 1.0))
+
+(define dx 0.00001)
+(define (derive f)
+  (lambda (x) (/ (- (f (+ x dx)) (f x))
+                 dx)))
+(define (newton-transform f)
+  (lambda (x)
+    (- x (/ (f x) ((derive f) x)))))
+
+(define (newton-method f guess)
+  (fixed-point (newton-transform f) guess))
+
+;; (define (sqrt x)
+;;   (newton-method (lambda (y) (- (square y) x))
+;;                  1.0))
+
+(define (fixed-point-of-transform f transform guess)
+  (fixed-point (transform f) guess))
+
+(define (sqrt x)
+  (fixed-point-of-transform (lambda (y) (/ x y))
+                            average-damp
+                            1.0))
+
+;; Exercise 1.41
+(define (double f)
+  (lambda (x) (f (f x))))
+
+;; Exercise 1.42
+(define (compose f g)
+  (lambda (x) (f (g x))))
