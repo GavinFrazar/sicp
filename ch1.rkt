@@ -1,5 +1,5 @@
 #lang racket
-
+(provide (all-defined-out))
 (define (square x) (* x x))
 (define (sum-of-squares a b) (+ (square a) (square b)))
 (define (>= a b) (not (< a b)))
