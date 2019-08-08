@@ -160,3 +160,57 @@
   (add-interval x
                 (make-interval (* -1 (upper-bound y))
                                (* -1 (lower-bound y)))))
+
+(define nil '())
+(define (list-ref list ref)
+  (define (iter list n)
+    (cond ((= n 0) (car list))
+          (else (iter (cdr list) (dec n)))))
+  (iter list ref))
+
+(define (length list)
+  (define (iter list count)
+    (cond ((null? list) count)
+          (else (iter (cdr list) (inc count)))))
+  (iter list 0))
+(define (append list1 list2)
+  (define (iter remaining-items acc)
+    (cond ((null? remaining-items) acc)
+          (else (iter (cdr remaining-items) (cons (car remaining-items) acc)))))
+  (iter (reverse list1) list2))
+
+;; Exercise 2.17
+(define (last-pair list)
+  (cond ((null? list) nil)
+        ((null? (cdr list)) (car list))
+        (else (last-pair (cdr list)))))
+
+;; Exercise 2.18
+(define (reverse list)
+  (define (iter remaining-items acc)
+    (cond ((null? remaining-items) acc)
+          (else (iter (cdr remaining-items)
+                      (cons (car remaining-items) acc)))))
+  (iter list nil))
+
+;; Exercise 2.19 -- TODO
+
+;; Exercise 2.20
+(define (same-parity . items)
+  (define (iter remaining-items acc parity)
+    (cond ((null? remaining-items) acc)
+          ((= (remainder (car remaining-items) 2) parity)
+           (iter (cdr remaining-items)
+                 (cons (car remaining-items) acc)
+                 parity))
+          (else (iter (cdr remaining-items) acc parity))))
+  (cond ((null? items) nil)
+        (else (reverse (iter items nil (remainder (car items) 2))))))
+
+(define (map f items)
+  (define (iter remaining-items acc)
+    (cond ((null? remaining-items) acc)
+          (else (iter (cdr remaining-items)
+                      (cons (f (car remaining-items))
+                            acc)))))
+  (reverse (iter items nil)))
