@@ -214,3 +214,95 @@
                       (cons (f (car remaining-items))
                             acc)))))
   (reverse (iter items nil)))
+
+;; Exercise 2.23
+(define (for-each action items)
+  (define (iter remaining-items)
+    (cond ((null? remaining-items) #t)
+          (else (action (car remaining-items))
+                (iter (cdr remaining-items)))))
+  (iter items))
+
+;; (define (count-leaves tree)
+;;   (cond ((null? tree) 0)
+;;         ((pair? tree) (+ (count-leaves (car tree))
+;;                          (count-leaves (cdr tree))))
+;;         (else 1)))
+(define (count-leaves tree)
+  (define (iter tree to-count acc)
+    (cond ((null? tree) (if (null? to-count) acc
+                            (iter (car to-count) (cdr to-count) acc)))
+          ((pair? tree) (iter (car tree) (cons (cdr tree) to-count) acc))
+          (else (if (null? to-count)
+                    (inc acc)
+                    (iter (car to-count) (cdr to-count) (inc acc))))))
+  (iter tree nil 0))
+
+;; Exercise 2.27
+(define (deep-reverse items)
+  (cond ((null? items) items)
+        ((pair? items)
+         (reverse (cons (deep-reverse (car items))
+                        (deep-reverse (cdr items)))))
+        (else items)))
+(define x (list (list 1 2) (list 3 4)))
+
+(define (map-tree f tree)
+  (cond ((null? tree) tree)
+        ((pair? tree)
+         (cons (map-tree f (car tree))
+               (map-tree f (cdr tree))))
+        (else (f tree))))
+
+;; Exercise 2.28
+(define (fringe tree)
+  (cond ((null? tree) tree)
+        ((pair? tree) (append (fringe (car tree))
+                              (fringe (cdr tree))))
+        (else (list tree))))
+
+;; Exercise 2.29
+(define (make-mobile left right)
+  (cons left right))
+(define (make-branch length structure)
+  (cons length structure))
+(define (left-branch mobile)
+  (car mobile))
+(define (right-branch mobile)
+  (cdr mobile))
+(define (branch-length branch)
+  (car branch))
+(define (branch-structure branch)
+  (cdr branch))
+
+(define (weigh structure)
+  (cond
+   ((null? structure) 0)
+   ((pair? structure)
+    (+ (weigh (branch-structure (left-branch structure)))
+       (weigh (branch-structure (right-branch structure)))))
+   (else structure)))
+
+(define (balanced? mobile)
+  (cond
+   ((pair? mobile)
+    (and (= (* (branch-length (left-branch mobile))
+               (weigh (branch-structure (left-branch mobile))))
+            (* (branch-length (right-branch mobile))
+               (weigh (branch-structure (right-branch mobile)))))
+         (balanced? (branch-structure (left-branch mobile)))
+         (balanced? (branch-structure (right-branch mobile)))))
+   (else #t)))
+
+;; tests
+;; (define m (make-mobile (make-branch 1 10) (make-branch 1 5)))
+;; (define n (make-mobile (make-branch 3 m) (make-branch 3 m)))
+;; (define p (make-mobile (make-branch 10 7) (make-branch 5 14)))
+;; (define q (make-mobile (make-branch 3 p) (make-branch 3 p)))
+;; (define r (make-mobile (make-branch 3 p) (make-branch 2 p)))
+
+;; (balanced? m)
+;; (balanced? n)
+;; (balanced? p)
+;; (balanced? q)
+;; (balanced? r)
