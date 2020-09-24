@@ -168,16 +168,16 @@
           (else (iter (cdr list) (dec n)))))
   (iter list ref))
 
-(define (length list)
-  (define (iter list count)
-    (cond ((null? list) count)
-          (else (iter (cdr list) (inc count)))))
-  (iter list 0))
-(define (append list1 list2)
-  (define (iter remaining-items acc)
-    (cond ((null? remaining-items) acc)
-          (else (iter (cdr remaining-items) (cons (car remaining-items) acc)))))
-  (iter (reverse list1) list2))
+;; (define (length list)
+;;   (define (iter list count)
+;;     (cond ((null? list) count)
+;;           (else (iter (cdr list) (inc count)))))
+;;   (iter list 0))
+;; (define (append list1 list2)
+;;   (define (iter remaining-items acc)
+;;     (cond ((null? remaining-items) acc)
+;;           (else (iter (cdr remaining-items) (cons (car remaining-items) acc)))))
+;;   (iter (reverse list1) list2))
 
 ;; Exercise 2.17
 (define (last-pair list)
@@ -189,8 +189,10 @@
 (define (reverse list)
   (define (iter remaining-items acc)
     (cond ((null? remaining-items) acc)
-          (else (iter (cdr remaining-items)
-                      (cons (car remaining-items) acc)))))
+          ((pair? remaining-items)
+           (iter (cdr remaining-items)
+                 (cons (car remaining-items) acc)))
+          (else remaining-items)))
   (iter list nil))
 
 ;; Exercise 2.19 -- TODO
@@ -207,13 +209,13 @@
   (cond ((null? items) nil)
         (else (reverse (iter items nil (remainder (car items) 2))))))
 
-(define (map f items)
-  (define (iter remaining-items acc)
-    (cond ((null? remaining-items) acc)
-          (else (iter (cdr remaining-items)
-                      (cons (f (car remaining-items))
-                            acc)))))
-  (reverse (iter items nil)))
+;; (define (map f items)
+;;   (define (iter remaining-items acc)
+;;     (cond ((null? remaining-items) acc)
+;;           (else (iter (cdr remaining-items)
+;;                       (cons (f (car remaining-items))
+;;                             acc)))))
+;;   (reverse (iter items nil)))
 
 ;; Exercise 2.23
 (define (for-each action items)
@@ -228,15 +230,15 @@
 ;;         ((pair? tree) (+ (count-leaves (car tree))
 ;;                          (count-leaves (cdr tree))))
 ;;         (else 1)))
-(define (count-leaves tree)
-  (define (iter tree to-count acc)
-    (cond ((null? tree) (if (null? to-count) acc
-                            (iter (car to-count) (cdr to-count) acc)))
-          ((pair? tree) (iter (car tree) (cons (cdr tree) to-count) acc))
-          (else (if (null? to-count)
-                    (inc acc)
-                    (iter (car to-count) (cdr to-count) (inc acc))))))
-  (iter tree nil 0))
+;; (define (count-leaves tree)
+;;   (define (iter tree to-count acc)
+;;     (cond ((null? tree) (if (null? to-count) acc
+;;                             (iter (car to-count) (cdr to-count) acc)))
+;;           ((pair? tree) (iter (car tree) (cons (cdr tree) to-count) acc))
+;;           (else (if (null? to-count)
+;;                     (inc acc)
+;;                     (iter (car to-count) (cdr to-count) (inc acc))))))
+;;   (iter tree nil 0))
 
 ;; Exercise 2.27
 (define (deep-reverse items)
@@ -246,13 +248,6 @@
                         (deep-reverse (cdr items)))))
         (else items)))
 (define x (list (list 1 2) (list 3 4)))
-
-(define (map-tree f tree)
-  (cond ((null? tree) tree)
-        ((pair? tree)
-         (cons (map-tree f (car tree))
-               (map-tree f (cdr tree))))
-        (else (f tree))))
 
 ;; Exercise 2.28
 (define (fringe tree)
@@ -306,3 +301,80 @@
 ;; (balanced? p)
 ;; (balanced? q)
 ;; (balanced? r)
+
+;; Exercise 2.30
+;; Direct solution
+;; (define (square-tree tree)
+;;   (cond ((null? tree) tree)
+;;         ((pair? tree) (cons (square-tree (car tree))
+;;                             (square-tree (cdr tree))))
+;;         (else (square tree))))
+;; Solution using map
+;; (define (square-tree tree)
+;;   (map
+;;    (lambda (sub-tree)
+;;      (cond ((pair? sub-tree) (square-tree sub-tree))
+;;            (else (square sub-tree))))
+;;    tree))
+
+;; Exercise 2.31
+;; (define (map-tree f tree)
+;;   (cond ((null? tree) tree)
+;;         ((pair? tree)
+;;          (cons (map-tree f (car tree))
+;;                (map-tree f (cdr tree))))
+;;         (else (f tree))))
+(define (map-tree f tree)
+  (map
+   (lambda (sub-tree) (cond ((pair? sub-tree)
+                             (map-tree f sub-tree))
+                            (else (f sub-tree))))
+   tree))
+(define (square-tree tree) (map-tree square tree))
+
+;; Exercise 2.32
+(define (subsets s)
+  (if (null? s)
+      (list nil)
+      (let ((rest (subsets (cdr s))))
+        (append rest (map (lambda (head) (cons (car s) head)) rest)))))
+
+;; bugged?
+;; (define (accumulate op identity-elem sequence)
+;;   (define (iter remaining acc)
+;;     (cond ((null? remaining) acc)
+;;           ((pair? remaining) (iter (cdr remaining)
+;;                                    (op (car remaining) acc)))
+;;           (else (op remaining acc))))
+;;   (reverse (iter sequence identity-elem)))
+(define (accumulate op initial sequence)
+  (if (null? sequence)
+      initial
+      (op (car sequence)
+          (accumulate op initial (cdr sequence)))))
+
+;; Exercise 2.33
+(define (map p sequence)
+  (accumulate (lambda (x y) (cons (p x) y)) nil sequence))
+(define (append seq1 seq2)
+  (accumulate cons seq2 seq1))
+(define (length sequence)
+  (accumulate (lambda (x y) (inc y)) 0 sequence))
+
+;; Exercise 2.34
+(define (horner-eval x coefficient-sequence)
+  (accumulate (lambda (this-coeff acc-sum)
+                (+ this-coeff (* acc-sum x)))
+              0
+              coefficient-sequence))
+
+;; Exercise 2.35
+(define (count-leaves t)
+  (accumulate + 0 (map (lambda (x) 1) (fringe t))))
+
+;; Exercise 2.36
+(define (accumulate-n op init seqs)
+  (if (null? (car seqs))
+      nil
+      (cons (accumulate op init (map car seqs))
+            (accumulate-n op init (map cdr seqs)))))
