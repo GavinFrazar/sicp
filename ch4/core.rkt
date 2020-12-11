@@ -307,8 +307,12 @@
         (list 'cdr cdr)
         (list 'cons cons)
         (list 'null? null?)
-;;      more primitives
-        ))
+        (list '+ +)
+        (list '* *)
+        (list '= =)
+        (list 'eq? eq?)
+        (list 'display display)
+        (list 'newline newline)))
 
 (define (primitive-procedure-names)
   (map car
