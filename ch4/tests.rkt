@@ -26,6 +26,11 @@
         (test-evaluator 'expr test-env)
         expected))]))
 
+(define-syntax test/diff
+  (syntax-rules ()
+    [(_ expr)
+     (test-eval expr => (eval 'expr (scheme-report-environment 5)))]))
+
 (define-syntax test-suite/tester
   (syntax-rules (=>)
     [(_ tester suite-name (test-case-name ... test-expr => test-expected) ...)
