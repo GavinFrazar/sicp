@@ -42,6 +42,12 @@
     [(_ suite-name tests ...)
      (test-suite/tester test-eval suite-name tests ...)]))
 
+(define-syntax diff-test-suite
+  (syntax-rules ()
+    [(_ suite-name tests ...)
+     (test-suite suite-name
+                 (test/diff tests) ...)]))
+
 (define (test/eval evaluator env)
   (set! test-evaluator evaluator)
   (set! test-env env)
@@ -52,18 +58,18 @@
                      (1 => 1)
                      ("abc" => "abc"))
 
-    (test-suite
+    (diff-test-suite
      "primitive-procedure"
-     (test/diff (cons 1 2))
-     (test/diff (car (cons 1 2)))
-     (test/diff (cdr (cons 1 2)))
-     (test/diff (+ 1 1))
-     (test/diff (- 1 1))
-     (test/diff (* 2 3))
-     (test/diff (= 1 1))
-     (test/diff (= 1 2))
-     (test/diff (eq? (cons 1 2) (cons 1 2)))
-     (test/diff (eq? 1 1)))
+     (cons 1 2)
+     (car (cons 1 2))
+     (cdr (cons 1 2))
+     (+ 1 1)
+     (- 1 1)
+     (* 2 3)
+     (= 1 1)
+     (= 1 2)
+     (eq? (cons 1 2) (cons 1 2))
+     (eq? 1 1))
 
     (eval-test-suite
      "begin"
