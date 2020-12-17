@@ -63,23 +63,23 @@
      (test/diff (= 1 1))
      (test/diff (= 1 2))
      (test/diff (eq? (cons 1 2) (cons 1 2)))
-     (test/diff (eq? 1 1))
+     (test/diff (eq? 1 1)))
 
-     (eval-test-suite
-      "begin"
-      ((begin 1) => 1)
-      ("begin form evals to last expression's value"
-       (begin 1 2 3) => 3)
-      ("begin/complex 1"
-       (begin
-         (define (fact n)
-           (if (= n 0)
-               1
-               (* n (fact (- n 1)))))
-         (fact 10))
-       => 3628800))))
+    (eval-test-suite
+     "begin"
+     ((begin 1) => 1)
+     ("begin form evals to last expression's value"
+      (begin 1 2 3) => 3)
+     ("begin/complex 1"
+      (begin
+        (define (fact n)
+          (if (= n 0)
+              1
+              (* n (fact (- n 1)))))
+        (fact 10))
+      => 3628800)))
   (run-tests all-eval-tests))
 
-;;(test/eval core:eval core:the-global-environment) ;; test my testing :D
+(test/eval core:eval core:the-global-environment) ;; test my testing :D
 
 (#%provide (all-defined))
