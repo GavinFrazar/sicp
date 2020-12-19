@@ -11,6 +11,8 @@
                                   hash-set!
                                   format)))
 
+(#%provide (all-defined))
+
 (define apply-in-underlying-scheme apply)
 
 (define (eval exp env)
@@ -334,4 +336,3 @@
 
 (define the-global-environment (setup-environment))
 
-(#%provide (all-defined))

@@ -10,6 +10,18 @@
          (prefix-in core:
                     "ddcore.rkt"))
 
+(#%provide set-eval!
+           set-env!
+           test-eval
+           test-eval/diff
+           define-test-suite/tester
+           define-eval-test-suite
+           define-eval-test/diff-suite
+           all-eval-tests
+           begin-tests
+           primitive-diff-tests
+           run-tests)
+
 (define test-evaluator core:eval)
 (define test-env core:the-global-environment)
 (define (set-eval! new-eval)
@@ -90,16 +102,4 @@
   primitive-diff-tests)
 
 ;; (test/eval test-evaluator test-env) ;; test my testing :D
-
-(#%provide set-eval!
-           set-env!
-           test-eval
-           test-eval/diff
-           define-test-suite/tester
-           define-eval-test-suite
-           define-eval-test/diff-suite
-           all-eval-tests
-           begin-tests
-           primitive-diff-tests
-           run-tests)
 

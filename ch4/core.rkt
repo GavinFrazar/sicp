@@ -13,6 +13,8 @@
 ;;;;**WARNING: Don't load this file twice (or you'll lose the primitives
 ;;;;  interface, due to renamings of apply).
 
+(#%provide (all-defined))
+
 ;;;from section 4.1.4 -- must precede def of metacircular apply
 (define apply-in-underlying-scheme apply)
 
@@ -359,4 +361,3 @@
 (define the-global-environment (setup-environment))
 ;;;(driver-loop)
 
-(#%provide (all-defined))
