@@ -57,7 +57,7 @@
        (test-eval/diff tests) ...)]))
 
 (define-eval-test-suite
-  begin-form
+  begin-tests
   ("evals to expression value"
    (begin 1) => 1)
   ("evals to last expression's value"
@@ -71,8 +71,8 @@
      (fact 10))
    => 3628800))
 
-  diff-primitives
 (define-eval-test/diff-suite
+  primitive-diff-tests
   (cons 1 2)
   (car (cons 1 2))
   (cdr (cons 1 2))
@@ -86,8 +86,8 @@
 
 ;; TODO: use foldts-test-suite to setup/teardown the env around each suite
 (define-test-suite all-eval-tests
-  begin-form
-  diff-primitives)
+  begin-tests
+  primitive-diff-tests)
 
 ;; (test/eval test-evaluator test-env) ;; test my testing :D
 
