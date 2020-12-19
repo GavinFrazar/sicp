@@ -39,7 +39,7 @@
     [(_ expr)
      (test-eval expr => (eval 'expr (scheme-report-environment 5)))]))
 
-(define-syntax test-suite/tester
+(define-syntax define-test-suite/tester
   (syntax-rules (=>)
     [(_ tester suite-name (test-case-name ... test-expr => test-expected) ...)
      (define-test-suite suite-name
@@ -48,9 +48,9 @@
 (define-syntax define-eval-test-suite
   (syntax-rules ()
     [(_ suite-name tests ...)
-     (test-suite/tester test-eval suite-name tests ...)]))
+     (define-test-suite/tester test-eval suite-name tests ...)]))
 
-(define-syntax define-diff-test-suite
+(define-syntax define-eval-test/diff-suite
   (syntax-rules ()
     [(_ suite-name tests ...)
      (define-test-suite suite-name
@@ -71,8 +71,8 @@
      (fact 10))
    => 3628800))
 
-(define-diff-test-suite
   diff-primitives
+(define-eval-test/diff-suite
   (cons 1 2)
   (car (cons 1 2))
   (cdr (cons 1 2))
