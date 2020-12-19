@@ -86,6 +86,6 @@
       => 3628800)))
   (run-tests all-eval-tests))
 
-(test/eval core:eval core:the-global-environment) ;; test my testing :D
+(test/eval test-evaluator test-env) ;; test my testing :D
 
 (#%provide (all-defined))
