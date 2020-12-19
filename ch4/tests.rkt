@@ -100,5 +100,6 @@
            define-eval-test/diff-suite
            all-eval-tests
            begin-tests
-           primitive-diff-tests)
+           primitive-diff-tests
+           run-tests)
 
