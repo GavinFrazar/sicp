@@ -72,7 +72,7 @@
    => 3628800))
 
 (define-diff-test-suite
-  primitive-procedures
+  diff-primitives
   (cons 1 2)
   (car (cons 1 2))
   (cdr (cons 1 2))
@@ -87,7 +87,7 @@
 ;; TODO: use foldts-test-suite to setup/teardown the env around each suite
 (define-test-suite all-eval-tests
   begin-form
-  primitive-procedures)
+  diff-primitives)
 
 ;; (test/eval test-evaluator test-env) ;; test my testing :D
 
