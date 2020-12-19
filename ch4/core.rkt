@@ -308,6 +308,7 @@
         (list 'cons cons)
         (list 'null? null?)
         (list '+ +)
+        (list '- -)
         (list '* *)
         (list '= =)
         (list 'eq? eq?)
