@@ -17,14 +17,18 @@
 (define-syntax test-eval
   (syntax-rules (=>)
     [(_ expr => expected)
-     (check-equal?
-      (test-evaluator 'expr test-env)
-      expected)]
+     (check-not-exn
+      (lambda ()
+        (check-equal?
+         (test-evaluator 'expr test-env)
+         expected)))]
     [(_ test-case-name expr => expected)
      (test-case (format "\"~a\"" test-case-name)
-       (check-equal?
-        (test-evaluator 'expr test-env)
-        expected))]))
+       (check-not-exn
+        (lambda ()
+          (check-equal?
+           (test-evaluator 'expr test-env)
+           expected))))]))
 
 (define-syntax test/diff
   (syntax-rules ()
