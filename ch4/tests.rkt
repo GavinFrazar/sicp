@@ -91,4 +91,14 @@
 
 ;; (test/eval test-evaluator test-env) ;; test my testing :D
 
-(#%provide (all-defined))
+(#%provide set-eval!
+           set-env!
+           test-eval
+           test-eval/diff
+           define-test-suite/tester
+           define-eval-test-suite
+           define-eval-test/diff-suite
+           all-eval-tests
+           begin-tests
+           primitive-diff-tests)
+
