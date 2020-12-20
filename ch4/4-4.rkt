@@ -10,8 +10,8 @@
         (let ([next-val (eval (car exps) env)])
           (if (true? next-val)
               (and-eval-loop (cdr exps) next-val)
-              'false))))
-  (and-eval-loop (and-operands exp) 'true))
+              false))))
+  (and-eval-loop (and-operands exp) true))
 
 (define (and-operands exp)
   (cdr exp))
@@ -19,7 +19,7 @@
 (define (eval-or exp env)
   (define (or-eval-loop exps)
     (if (null? exps)
-        'false
+        false
         (let ([next-val (eval (car exps) env)])
           (if (true? next-val)
               next-val

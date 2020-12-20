@@ -142,7 +142,7 @@
 (define (if-alternative exp)
   (if (not (null? (cdddr exp)))
       (cadddr exp)
-      'false))
+      false))
 
 (define (make-if predicate consequent alternative)
   (list 'if predicate consequent alternative))
@@ -189,7 +189,7 @@
 
 (define (expand-clauses clauses)
   (if (null? clauses)
-      'false                          ; no else clause
+      false                          ; no else clause
       (let ((first (car clauses))
             (rest (cdr clauses)))
         (if (cond-else-clause? first)
