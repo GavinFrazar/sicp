@@ -35,6 +35,7 @@
 
 (test-eval (and) => 'true)
 (test-eval (and 1) => 1)
+(test-eval (and 1 2) => 2)
 (test-eval (and false) => 'false)
 (test-eval (and 1 false 2) => 'false)
 
