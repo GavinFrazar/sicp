@@ -102,6 +102,15 @@
          [else 2])
    => 2))
 
+(define-eval-test-suite
+  lambda-tests
+  ("lambda captures its environment"
+   (((lambda (a) (lambda () a)) 42))
+   => 42)
+  ("lambda shadows variables"
+   (((lambda (a) (lambda (a) a)) 1) 2)
+   => 2))
+
 (define-eval-test/diff-suite
   primitive-diff-tests
   (cons 1 2)
@@ -119,6 +128,7 @@
 (define-test-suite all-eval-tests
   begin-tests
   cond-tests
+  lambda-tests
   primitive-diff-tests)
 
 ;; (test/eval test-evaluator test-env) ;; test my testing :D
