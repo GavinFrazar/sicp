@@ -146,6 +146,14 @@
   ("evaluates alternative"
    (if false (/ 1 0) 2) => 2))
 
+(define-eval-test-suite
+  set!-tests
+  ("mutates variable"
+   (begin (define y 1)
+          (set! y 2)
+          y)
+   => 2))
+
 (define-eval-test/diff-suite
   primitive-diff-tests
   (cons 1 2)
@@ -167,6 +175,7 @@
   quote-tests
   define-tests
   if-tests
+  set!-tests
   primitive-diff-tests)
 
 ;; (test/eval test-evaluator test-env) ;; test my testing :D
