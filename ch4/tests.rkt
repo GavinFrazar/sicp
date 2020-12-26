@@ -111,6 +111,17 @@
    (((lambda (a) (lambda (a) a)) 1) 2)
    => 2))
 
+(define-eval-test-suite
+  quote-tests
+  ("quoted expression is not evaluated"
+   (quote (/ 1 0))
+   => '(/ 1 0))
+  ("quote quote"
+   (quote (quote a))
+   => '(quote a))
+  ("short-hand quote"
+   'a => 'a))
+
 (define-eval-test/diff-suite
   primitive-diff-tests
   (cons 1 2)
@@ -129,6 +140,7 @@
   begin-tests
   cond-tests
   lambda-tests
+  quote-tests
   primitive-diff-tests)
 
 ;; (test/eval test-evaluator test-env) ;; test my testing :D
