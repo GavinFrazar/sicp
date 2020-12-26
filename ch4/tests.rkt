@@ -85,7 +85,7 @@
 
 (define-eval-test-suite
   cond-tests
-  ("cond evaluates first true consequent"
+  ("evaluates first true consequent"
    (cond [true 1]
          [true 2])
    => 1)
@@ -93,21 +93,21 @@
    (cond [false (/ 1 0)]
          [true 2])
    => 2)
-  ("cond does not evaluate alternative"
+  ("does not evaluate alternative"
    (cond [true 1]
          [false (/ 1 0)])
    => 1)
-  ("cond evaluates else clause"
+  ("evaluates else clause"
    (cond [false 1]
          [else 2])
    => 2))
 
 (define-eval-test-suite
   lambda-tests
-  ("lambda captures its environment"
+  ("captures its environment"
    (((lambda (a) (lambda () a)) 42))
    => 42)
-  ("lambda shadows variables"
+  ("shadows variables"
    (((lambda (a) (lambda (a) a)) 1) 2)
    => 2))
 
