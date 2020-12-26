@@ -83,6 +83,25 @@
      (fact 10))
    => 3628800))
 
+(define-eval-test-suite
+  cond-tests
+  ("cond evaluates first true consequent"
+   (cond [true 1]
+         [true 2])
+   => 1)
+  ("cond does not evaluate false consequent"
+   (cond [false (/ 1 0)]
+         [true 2])
+   => 2)
+  ("cond does not evaluate alternative"
+   (cond [true 1]
+         [false (/ 1 0)])
+   => 1)
+  ("cond evaluates else clause"
+   (cond [false 1]
+         [else 2])
+   => 2))
+
 (define-eval-test/diff-suite
   primitive-diff-tests
   (cons 1 2)
@@ -99,6 +118,7 @@
 ;; TODO: use foldts-test-suite to setup/teardown the env around each suite
 (define-test-suite all-eval-tests
   begin-tests
+  cond-tests
   primitive-diff-tests)
 
 ;; (test/eval test-evaluator test-env) ;; test my testing :D
