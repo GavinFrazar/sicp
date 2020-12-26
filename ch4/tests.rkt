@@ -122,6 +122,23 @@
   ("short-hand quote"
    'a => 'a))
 
+(define-eval-test-suite
+  define-tests
+  ("binds variable"
+   (begin (define x 3) x) => 3)
+  ("binds procedure"
+   (begin (define (f x) x)
+          (f 42))
+   => 42)
+  ("nests"
+   (begin
+     (define (f x)
+       (define (g x)
+         x)
+       (+ x (g 1)))
+     (f 2))
+   => 3))
+
 (define-eval-test/diff-suite
   primitive-diff-tests
   (cons 1 2)
@@ -141,6 +158,7 @@
   cond-tests
   lambda-tests
   quote-tests
+  define-tests
   primitive-diff-tests)
 
 ;; (test/eval test-evaluator test-env) ;; test my testing :D
