@@ -139,6 +139,13 @@
      (f 2))
    => 3))
 
+(define-eval-test-suite
+  if-tests
+  ("evaluates consequent"
+   (if true 1 (/ 1 0)) => 1)
+  ("evaluates alternative"
+   (if false (/ 1 0) 2) => 2))
+
 (define-eval-test/diff-suite
   primitive-diff-tests
   (cons 1 2)
@@ -159,6 +166,7 @@
   lambda-tests
   quote-tests
   define-tests
+  if-tests
   primitive-diff-tests)
 
 ;; (test/eval test-evaluator test-env) ;; test my testing :D
