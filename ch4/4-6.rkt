@@ -8,9 +8,8 @@
 
 (define (let->combination exp)
   (let ([bindings (let-bindings exp)])
-    (apply list
-           (make-lambda (binding-parameters bindings) (list (let-body exp)))
-           (binding-expressions bindings))))
+    (cons (make-lambda (binding-parameters bindings) (list (let-body exp)))
+          (binding-expressions bindings))))
 
 (define (let-bindings exp)
   (cadr exp))
