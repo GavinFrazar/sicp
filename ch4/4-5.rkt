@@ -1,9 +1,7 @@
 #lang sicp
 
-(#%require "ddcore.rkt"
-           (only racket/base
-                 provide prefix-out))
-(provide (prefix-out 4-5: cond->if))
+(#%require "ddcore.rkt")
+(#%provide cond->if)
 
 (define (cond->if exp)
   (expand-clauses (cond-clauses exp)))

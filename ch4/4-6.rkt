@@ -2,9 +2,9 @@
 
 (#%require "ddcore.rkt"
            (only racket/base
-                 provide prefix-out module+)
+                 module+)
            rackunit)
-(provide (prefix-out 4-6: let->combination))
+(#%provide let->combination)
 
 (define (let->combination exp)
   (let ([bindings (let-bindings exp)])

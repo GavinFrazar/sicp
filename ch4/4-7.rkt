@@ -2,9 +2,9 @@
 
 (#%require "ddcore.rkt"
            (only racket/base
-                 provide prefix-out module+)
+                 module+)
            rackunit)
-(provide (prefix-out 4-7: let*->nested-lets))
+(#%provide let*->nested-lets)
 
 (define (let*->nested-lets exp)
   (let*-expand (let*-parameters exp) (let*-body exp)))

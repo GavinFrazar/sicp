@@ -3,16 +3,22 @@
 (#%require (only racket/base
                  require
                  prefix-in
+                 only-in
                  format))
 
 (require rackunit
          rackunit/text-ui
          (prefix-in core:
                     "ddcore.rkt")
-         "4-4.rkt"
-         "4-5.rkt"
-         "4-6.rkt"
-         "4-7.rkt")
+         (prefix-in 4-4: (only-in "4-4.rkt"
+                                  eval-and
+                                  eval-or))
+         (prefix-in 4-5: (only-in "4-5.rkt"
+                                  cond->if))
+         (prefix-in 4-6: (only-in "4-6.rkt"
+                                  let->combination))
+         (prefix-in 4-7: (only-in "4-7.rkt"
+                                  let*->nested-lets)))
 
 (#%provide set-eval!
            set-env!

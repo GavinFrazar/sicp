@@ -1,10 +1,7 @@
 #lang sicp
 
-(#%require "ddcore.rkt"
-           (only racket/base
-                 provide prefix-out combine-out))
-(provide (prefix-out 4-4:
-                     (combine-out eval-and eval-or)))
+(#%require "ddcore.rkt")
+(#%provide eval-and eval-or)
 
 (define (eval-and exp env)
   (define (and-eval-loop exps last-val)
