@@ -8,7 +8,9 @@
 (require rackunit
          rackunit/text-ui
          (prefix-in core:
-                    "ddcore.rkt"))
+                    "ddcore.rkt")
+         "4-4.rkt"
+         "4-5.rkt")
 
 (#%provide set-eval!
            set-env!
@@ -17,9 +19,6 @@
            define-test-suite/tester
            define-eval-test-suite
            define-eval-test/diff-suite
-           all-eval-tests
-           begin-tests
-           primitive-diff-tests
            run-tests)
 
 (define test-evaluator core:eval)
@@ -168,7 +167,7 @@
   (eq? 1 1))
 
 ;; TODO: use foldts-test-suite to setup/teardown the env around each suite
-(define-test-suite all-eval-tests
+(define-test-suite basic-tests
   begin-tests
   cond-tests
   lambda-tests
@@ -178,5 +177,45 @@
   set!-tests
   primitive-diff-tests)
 
-;; (test/eval test-evaluator test-env) ;; test my testing :D
+(run-tests basic-tests)
 
+(core:install-special-form `(and ,4-4:eval-and))
+(core:install-special-form `(or ,4-4:eval-or))
+
+(define-eval-test-suite
+  and-or-tests
+  ("and w/o values returns false"
+   (and) => true)
+  ("and with a single truthy value returns its value"
+   (and 1) => 1)
+  ("and with all truthy values returns the last value"
+   (and 1 2) => 2)
+  ("and with a false arg returns false"
+   (and false) => false)
+  ((and 1 false 2) => false)
+  ((or) => false)
+  ((or 1) => 1)
+  ((or 1 2) => 1)
+  ((or false 1) => 1)
+  ((or 1 false) => 1)
+  ("nested predicate evaluates correctly"
+   (or (and false) 42) => 42))
+
+(run-tests and-or-tests)
+
+(core:install-special-form `(cond ,(lambda (exp env)
+                                     (core:eval (4-5:cond->if exp) env))))
+
+(define-eval-test-suite
+  cond-recipient-tests
+  ("applies true predicate value to recipient function"
+   (cond (1 => (lambda (x) (+ x x))))
+   => 2)
+  ("works with mix of clauses"
+   (cond (false => (lambda (x) 1))
+         (false 2)
+         (3 => (lambda (x) x))
+         (else 42))
+   => 3))
+
+(run-tests cond-recipient-tests)
