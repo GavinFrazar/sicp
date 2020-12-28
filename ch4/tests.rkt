@@ -11,7 +11,8 @@
                     "ddcore.rkt")
          "4-4.rkt"
          "4-5.rkt"
-         "4-6.rkt")
+         "4-6.rkt"
+         "4-7.rkt")
 
 (#%provide set-eval!
            set-env!
@@ -231,3 +232,17 @@
    (let ((a 1) (b 2)) a) => 1))
 
 (run-tests let-tests)
+
+(core:install-special-form `(let* ,(lambda (exp env)
+                                     (core:eval (4-7:let*->nested-lets exp)
+                                                env))))
+
+(define-eval-test-suite
+  let*-tests
+  ("basic test"
+   (let* ((a 1)
+          (b (+ a 1)))
+     (+ a b))
+   => 3))
+
+(run-tests let*-tests)
