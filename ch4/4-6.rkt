@@ -8,14 +8,14 @@
 
 (define (let->combination exp)
   (let ([bindings (let-bindings exp)])
-    (cons (make-lambda (binding-parameters bindings) (list (let-body exp)))
+    (cons (make-lambda (binding-parameters bindings) (let-body exp))
           (binding-expressions bindings))))
 
 (define (let-bindings exp)
   (cadr exp))
 
 (define (let-body exp)
-  (caddr exp))
+  (cddr exp))
 
 (define (binding-parameters bindings)
   (map car bindings))
@@ -26,8 +26,8 @@
 (module+ test
   (define bindings '((a (+ x 1))
                      (b 42)))
-  (define body '(+ a b))
-  (define test-exp `(let ,bindings ,body))
+  (define body '((+ a b)))
+  (define test-exp (cons 'let (cons bindings body)))
   (check-equal? (let-bindings test-exp)
                 bindings)
   (check-equal? (let-body test-exp)
