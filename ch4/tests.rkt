@@ -235,7 +235,11 @@
 (define-eval-test-suite
   let-tests
   ("basic test"
-   (let ((a 1) (b 2)) a) => 1))
+   (let ((a 1) (b 2)) a) => 1)
+  ("binds second var"
+   (let ((a 1) (b 2)) b) => 2)
+  ("binds both vars"
+   (let ((a 1) (b 2)) (+ a b)) => 3))
 
 (run-tests let-tests)
 
