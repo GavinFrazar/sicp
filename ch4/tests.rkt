@@ -18,7 +18,9 @@
          (prefix-in 4-6: (only-in "4-6.rkt"
                                   let->combination))
          (prefix-in 4-7: (only-in "4-7.rkt"
-                                  let*->nested-lets)))
+                                  let*->nested-lets))
+         (prefix-in 4-8: (only-in "4-8.rkt"
+                                  let->combination)))
 
 (#%provide set-eval!
            set-env!
@@ -256,3 +258,25 @@
    => 3))
 
 (run-tests let*-tests)
+
+(core:install-special-form `(let ,(lambda (exp env)
+                                    (core:eval (4-8:let->combination exp)
+                                               env))))
+
+(define-eval-test-suite
+  named-let-tests
+  ("basic test"
+   (let sum ((n 5)) (if (= n 0) n (+ n (sum (- n 1)))))
+   => 15)
+  ("fib test"
+   (begin 
+     (define (fib n)
+       (let fib-iter ((a 1) (b 0) (count n))
+         (if (= count 0)
+             b
+             (fib-iter (+ a b)
+                       a
+                       (- count 1)))))
+     (fib 10))
+   => 55))
+(run-tests named-let-tests)
