@@ -4,7 +4,8 @@
                  require
                  prefix-in
                  only-in
-                 format))
+                 format
+                 void))
 
 (require rackunit
          rackunit/text-ui
@@ -20,7 +21,9 @@
          (prefix-in 4-7: (only-in "4-7.rkt"
                                   let*->nested-lets))
          (prefix-in 4-8: (only-in "4-8.rkt"
-                                  let->combination)))
+                                  let->combination))
+         (prefix-in 4-9: (only-in "4-9.rkt"
+                                  while->combination)))
 
 (#%provide set-eval!
            set-env!
@@ -280,3 +283,18 @@
      (fib 10))
    => 55))
 (run-tests named-let-tests)
+
+(core:install-special-form `(while ,(lambda (exp env)
+                                    (core:eval (4-9:while->combination exp)
+                                               env))))
+(define-eval-test-suite
+  while-tests
+  ("basic test"
+   (let ((x 3))
+     (while (> x 0) (begin (display x)
+                           (set! x (- x 1))))
+     (newline))
+   => (void)))
+(run-tests while-tests)
+;; since my while loop is so simple, I just verify that the loop exits properly
+;; and that the expected side effect (displaying 321) is observed
